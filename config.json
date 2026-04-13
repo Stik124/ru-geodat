@@ -17,14 +17,6 @@
         "outputName": "geoip.dat",
         "wantedList": ["ru-whitelist"]
       }
-    },
-    {
-      "type": "text",
-      "action": "output",
-      "args": {
-        "outputDir": "text",
-        "wantedList": ["ru-whitelist"]
-      }
     }
   ]
 }
