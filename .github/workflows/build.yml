@@ -2,11 +2,8 @@ name: Build GeoIP Files
 
 on:
   schedule:
-    # Каждый день в 6:00 UTC (9:00 МСК)
     - cron: '0 6 * * *'
-  # Ручной запуск из интерфейса GitHub
   workflow_dispatch:
-  # Запуск при изменении config.json
   push:
     branches:
       - main
@@ -18,47 +15,38 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Шаг 1 - Получаем наш репозиторий
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Шаг 2 - Устанавливаем Go
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
-      # Шаг 3 - Клонируем сборщик от v2fly
       - name: Clone geoip builder
         run: |
           git clone https://github.com/v2fly/geoip.git /tmp/geoip-builder
 
-      # Шаг 4 - Копируем наш конфиг в сборщик
       - name: Copy config
         run: |
           cp config.json /tmp/geoip-builder/
 
-      # Шаг 5 - Запускаем сборку
       - name: Build
         run: |
           cd /tmp/geoip-builder
           go run ./ -c config.json
 
-      # Шаг 6 - Копируем результаты к нам
+      - name: Show output structure
+        run: |
+          echo "=== Что создал сборщик ==="
+          find /tmp/geoip-builder/output -type f
+
       - name: Copy output files
         run: |
           mkdir -p release/text
-          
-          # Копируем .dat файл
-          cp /tmp/geoip-builder/output/geoip.dat release/geoip.dat
-          
-          # Копируем .db файл (sing-box)
-          cp /tmp/geoip-builder/output/geoip.db release/geoip.db
-          
-          # Копируем текстовые файлы
-          cp /tmp/geoip-builder/output/text/*.txt release/text/
+          cp /tmp/geoip-builder/output/dat/geoip.dat release/geoip.dat
+          cp /tmp/geoip-builder/output/text/ru-whitelist.txt release/text/
 
-      # Шаг 7 - Показываем размеры файлов в логах
       - name: Show file sizes
         run: |
           echo "=== Размеры файлов ==="
@@ -67,19 +55,16 @@ jobs:
           echo "=== Количество записей ==="
           wc -l release/text/*.txt
 
-      # Шаг 8 - Публикуем как Release
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: "Latest Build"
           body: |
-            Автосборка от ${{ github.run_id }}
-            Обновлено: ${{ github.event.head_commit.timestamp }}
+            Обновлено: ${{ github.run_id }}
             
             ## Файлы
             - `geoip.dat` — для Xray / V2Ray
-            - `geoip.db` — для Sing-box
             
             ## Использование
             ```
@@ -87,13 +72,11 @@ jobs:
             ```
           files: |
             release/geoip.dat
-            release/geoip.db
-            release/text/*.txt
+            release/text/ru-whitelist.txt
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Шаг 9 - Коммитим текстовые файлы в репозиторий
       - name: Commit to repository
         run: |
           git config user.name "GitHub Actions"
