@@ -36,51 +36,16 @@ jobs:
           cd /tmp/geoip-builder
           go run ./ -c config.json
 
-      - name: Show output structure
+      - name: Copy output
         run: |
-          echo "=== Что создал сборщик ==="
-          find /tmp/geoip-builder/output -type f
-
-      - name: Copy output files
-        run: |
-          mkdir -p release/text
-          cp /tmp/geoip-builder/output/dat/geoip.dat release/geoip.dat
-          cp /tmp/geoip-builder/output/text/ru-whitelist.txt release/text/
-
-      - name: Show file sizes
-        run: |
-          echo "=== Размеры файлов ==="
-          ls -lh release/
-          ls -lh release/text/
-          echo "=== Количество записей ==="
-          wc -l release/text/*.txt
+          cp /tmp/geoip-builder/output/dat/geoip.dat geoip.dat
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: "Latest Build"
-          body: |
-            Обновлено: ${{ github.run_id }}
-            
-            ## Файлы
-            - `geoip.dat` — для Xray / V2Ray
-            
-            ## Использование
-            ```
-            geoip:ru-whitelist → direct
-            ```
-          files: |
-            release/geoip.dat
-            release/text/ru-whitelist.txt
+          files: geoip.dat
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit to repository
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add release/
-          git diff --staged --quiet || git commit -m "chore: update $(date '+%Y-%m-%d %H:%M UTC')"
-          git push
