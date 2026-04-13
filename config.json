@@ -1,0 +1,38 @@
+{
+  "input": [
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "ru-whitelist",
+        "uri": "https://raw.githubusercontent.com/runetfreedom/russia-blocked-geoip/release/text/ru-whitelist.txt"
+      }
+    }
+  ],
+  "output": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "output",
+      "args": {
+        "outputName": "geoip.dat",
+        "wantedList": ["ru-whitelist"]
+      }
+    },
+    {
+      "type": "sing-box",
+      "action": "output",
+      "args": {
+        "outputName": "geoip.db",
+        "wantedList": ["ru-whitelist"]
+      }
+    },
+    {
+      "type": "text",
+      "action": "output",
+      "args": {
+        "outputDir": "text",
+        "wantedList": ["ru-whitelist"]
+      }
+    }
+  ]
+}
