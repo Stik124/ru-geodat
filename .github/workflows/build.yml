@@ -42,7 +42,7 @@ jobs:
       - name: Build
         run: |
           cd /tmp/geoip-builder
-          go run ./ --config config.json
+          go run ./ -c config.json
 
       # Шаг 6 - Копируем результаты к нам
       - name: Copy output files
