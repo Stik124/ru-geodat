@@ -19,14 +19,6 @@
       }
     },
     {
-      "type": "sing-box",
-      "action": "output",
-      "args": {
-        "outputName": "geoip.db",
-        "wantedList": ["ru-whitelist"]
-      }
-    },
-    {
       "type": "text",
       "action": "output",
       "args": {
