@@ -29,7 +29,7 @@ jobs:
         run: |
           git clone https://github.com/v2fly/geoip.git /tmp/geoip-builder
 
-      - name: Copy config and lists
+      - name: Copy all files to builder
         run: |
           cp config.json /tmp/geoip-builder/
           cp extra_ips.txt /tmp/geoip-builder/
