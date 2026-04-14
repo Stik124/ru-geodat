@@ -9,6 +9,8 @@ on:
       - main
     paths:
       - 'config.json'
+      - 'extra_ips.txt'
+      - 'exclude_ips.txt'
 
 jobs:
   build:
@@ -27,9 +29,11 @@ jobs:
         run: |
           git clone https://github.com/v2fly/geoip.git /tmp/geoip-builder
 
-      - name: Copy config
+      - name: Copy config and lists
         run: |
           cp config.json /tmp/geoip-builder/
+          cp extra_ips.txt /tmp/geoip-builder/
+          cp exclude_ips.txt /tmp/geoip-builder/
 
       - name: Build
         run: |
