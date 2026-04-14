@@ -7,6 +7,22 @@
         "name": "ru-whitelist",
         "uri": "https://raw.githubusercontent.com/runetfreedom/russia-blocked-geoip/release/text/ru-whitelist.txt"
       }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "ru-whitelist",
+        "uri": "extra_ips.txt"
+      }
+    },
+    {
+      "type": "text",
+      "action": "remove",
+      "args": {
+        "name": "ru-whitelist",
+        "uri": "exclude_ips.txt"
+      }
     }
   ],
   "output": [
